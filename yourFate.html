@@ -11,7 +11,7 @@
           <div class="setting_title">
             <span>Here is your fate!</span>
           </div>
-          <div class="profile-picture-circle">
+          <div class="profile-picture-circle" onclick="directProfile()">
             <img
               class="profile-picture-circle-pic"
               src="icon1.png"
@@ -19,7 +19,7 @@
             />
           </div>
 
-          <div class="fate-username">
+          <div class="fate-username" onclick="directProfile()">
             <span>@randomboy</span>
           </div>
         </div>
@@ -152,5 +152,8 @@
   }
   function closesend() {
     document.getElementById("send_box").style.display = "none";
+  }
+  function directProfile() {
+    location.href = "/my-profile.html";
   }
 </script>
