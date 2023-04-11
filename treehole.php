@@ -121,16 +121,7 @@
                               echo"</div>";
                           }
                         }
-                        $sql = "SELECT * FROM treeholecomment WHERE TreeholeID=$tid";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-                          // output data of each row
-                          while($row = $result->fetch_assoc()) {
-                            $msg = $row["Text"];
-                              echo"<div class='treehole_other'>";
-                              echo"<span>$msg</span>";
-                              echo"</div>";
-                          }
+                       
                         }
 
                         if(isset($_POST["send"])){
