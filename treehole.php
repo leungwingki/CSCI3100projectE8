@@ -15,10 +15,11 @@
                     <div class="btn01" onclick="openleavemsg()">
                         <span> Leave a message</span>
                     </div>
+                    <form method="POST">
+<button type="submit" name="read" div class="btn02" >Read a message</button>
                     
-                    <div class="btn02" onclick="opentreehole()">
-                        <span> Read a message</span>
-                    </div>
+</form>
+
                 </div>
                 
                 <div class="close_box" onclick="closechoose()"></div>
@@ -46,9 +47,9 @@
 
                     if(isset($_POST["send1"])){
                         if($_POST["inputbox1"] != ""){
-                            $new = $_POST["inputbox1"];
+                            $new1 = $_POST["inputbox1"];
                             $sql = "INSERT INTO treehole(TreeholeID, Text)
-                                    VALUES((SELECT COALESCE(MAX(TreeholeID), 0) + 1 FROM (SELECT * FROM treehole) AS tc1), '$new')";
+                                    VALUES((SELECT COALESCE(MAX(TreeholeID), 0) + 1 FROM (SELECT * FROM treehole) AS tc1), '$new1')";
                             if($conn->query($sql) == FALSE){
                                 echo "error :(";
                             }else{
@@ -108,18 +109,33 @@
                         }
 
                         // id
+session_start();
+
+$tid=1;
+if(isset($_POST["read"])){
+    echo"<script>document.getElementById('box').style.display = 'block'</script>";
                         $tid = $conn->query("SELECT TreeholeID FROM treehole ORDER BY RAND() LIMIT 1")->fetch_assoc()["TreeholeID"];
+    $_SESSION['tid']=$tid;
+    }
+
+if(isset($_SESSION['tid'])){
+    $tid=$_SESSION['tid'];
+}
                         
-                        $sql = "SELECT * FROM treehole WHERE TreeholeID=$tid";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
+                        $sql1 = "SELECT * FROM treehole WHERE TreeholeID=$tid";
+                        $result1 = $conn->query($sql1);
+                        
+                                                
+                        if ($result1->num_rows > 0) {
                           // output data of each row
-                          while($row = $result->fetch_assoc()) {
-                            $msg = $row["Text"];
+                          while($row = $result1->fetch_assoc()) {
+                              $result1->num_rows;
+                              $msg = $row["Text"];
                               echo"<div class='treehole_title'>";
                               echo"<span>$msg</span>";
                               echo"</div>";
                           }
+                            
                         }
 
                         $sql = "SELECT * FROM treeholecomment WHERE TreeholeID=$tid";
@@ -137,9 +153,9 @@
 
                         if(isset($_POST["send"])){
                             if($_POST["inputbox"] != ""){
-                                $new = $_POST["inputbox"];
+                                $new2 = $_POST["inputbox"];
                                 $sql = "INSERT INTO treeholecomment(TreeholeID, CommentID, Text)
-                                        VALUES( $tid, (SELECT COALESCE(MAX(CommentID), 0) + 1 FROM (SELECT * FROM treeholecomment) AS tc), '$new')";
+                                        VALUES((SELECT TreeholeID FROM treehole WHERE Text='$msg'), (SELECT COALESCE(MAX(CommentID), 0) + 1 FROM (SELECT * FROM treeholecomment) AS tc), '$new2')";
                                 if($conn->query($sql) == FALSE){
                                     echo "error :(";
                                 }else{
@@ -149,6 +165,8 @@
                                 }
                                 
                             }
+                        }else{
+                            
                         }
                         ?>
 
