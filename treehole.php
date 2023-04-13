@@ -108,8 +108,8 @@
                         }
 
                         // id
-                        $tid = 1;
-
+                        $tid = $conn->query("SELECT TreeholeID FROM treehole ORDER BY RAND() LIMIT 1")->fetch_assoc()["TreeholeID"];
+                        
                         $sql = "SELECT * FROM treehole WHERE TreeholeID=$tid";
                         $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
@@ -121,14 +121,25 @@
                               echo"</div>";
                           }
                         }
-                       
+
+                        $sql = "SELECT * FROM treeholecomment WHERE TreeholeID=$tid";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                          // output data of each row
+                          while($row = $result->fetch_assoc()) {
+                              $com = $row["Text"];
+                              echo"<div class='treehole_other'>";
+                              echo"<span>$com</span>";
+                              echo"</div>";
+                          }
                         }
+                       
 
                         if(isset($_POST["send"])){
                             if($_POST["inputbox"] != ""){
                                 $new = $_POST["inputbox"];
                                 $sql = "INSERT INTO treeholecomment(TreeholeID, CommentID, Text)
-                                        VALUES(1, (SELECT COALESCE(MAX(CommentID), 0) + 1 FROM (SELECT * FROM treeholecomment) AS tc), '$new')";
+                                        VALUES( $tid, (SELECT COALESCE(MAX(CommentID), 0) + 1 FROM (SELECT * FROM treeholecomment) AS tc), '$new')";
                                 if($conn->query($sql) == FALSE){
                                     echo "error :(";
                                 }else{
