@@ -7,10 +7,9 @@ session_start();
     <meta charset="utf-8" />
     <title></title>
   </head>
-
   <body>
 
-  <?php
+				<?php
 					$servername = "localhost";
 					$username = "root";
 					$password = "";
@@ -21,85 +20,85 @@ session_start();
 					}
 
 					$user = $_SESSION['UserID'];
-          $fateid;
+          $result_one_zero;
           $username;
           $usericon;
           date_default_timezone_set('Asia/Hong_Kong');
 
-          if (date ("h:i:sa") == "12:00:00am"){
+          if (date ("h:i:sa") <= "12:00:00am"){
             $sql = "UPDATE `dailyluck` SET FateFlag=0 WHERE USERID=$user";
             $result = $conn->query($sql);
           } 
 					$check_fate = "SELECT FateFlag FROM `dailyluck` WHERE USERID = $user";
-          $fate_result = mysqli_query($conn,$check_fate );
+          $fate_result = $conn->query($check_fate);
           while($row = $fate_result->fetch_array()){
-            $fateid=$row[0];
+            $result_one_zero = $row[0];
           }
-          // mysqli_num_rows($fate_result )==0
-          if(mysqli_num_rows($fate_result )==0){
+
+          if($result_one_zero =="0"){
+            //random draw
             $draw_fate_row ="SELECT m.UserID, m.Username, m.Icon
             FROM user m WHERE (UserID!= $user) AND (UserID!=1) ORDER BY RAND ( ) LIMIT 1";
             $fate_result = $conn->query($draw_fate_row);
             // print
             while($row = $fate_result->fetch_array()){
-              $fateid=$row[0];
               $username = $row[1];
               $usericon = (string)$row[2];
             }
-            $fate_update = "INSERT INTO `dailyluck` ( FateFlag,UserID)
-            VALUES ($fateid ,$user);";
-           }else{
-              $get_fate = " SELECT m.UserID, m.Username, m.Icon FROM user m WHERE UserID= $fateid ";
-              $fate_result = $conn->query($get_fate);
-              while($row = $fate_result->fetch_array()){
-                $username = $row[1];
-                $usericon = (string)$row[2];
-              }
-            }
-            echo"<div class ='box' ><div style='position: absolute' id='choose_box'>";
-            echo "<div class='setting_title' id=fateid ><span> Here is your fate! </span></div>";
-            echo "<div class='profile-picture-circle' onclick=\"directProfile()\"> ";
-            
-            if($usericon != null){
-              echo "<img class='profile-picture-circle-pic' src='data:image;base64,".base64_encode($usericon). "' alt='Profile Picture' /></div>";
-            }else{
-              echo "<img  class='no-media' /></div>";
-            }
-            echo "<div class='fate-username' onclick=\"directProfile()\"> <span>@$username</span>";
-            echo "</div></div></div></div>";
+
+            //update the fate database
+            $fate_update = "UPDATE `dailyluck` SET FateFlag=1 WHERE USERID=$user";
+            $fate_updateD = $conn->query($fate_update);
+
+//if clicking treehole or setting, reload the page, no stored data
+          }
           
-        
-				?>
+          
 
-        <?php 
-
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $db = "tinkle";
-        $conn = new mysqli($servername, $username, $password, $db);
-                
-            if(isset($_POST["submit"])){
-                
-                $sth = "SELECT UserID FROM user WHERE Username='$fateid'";
-                $result =$conn->query($sth);
-              
-                if($row = $result->fetch_array()){
-                
-                  $_SESSION["targetuser"] = $row[0];
-                  
-                  header('Location: my-profile-others.php');
-
-                }else{
-
-                  echo"Username do not exisit";
-
-                }
+            echo"<div class ='box' ><div style='position: absolute' id='choose_box'>";
+            echo "<div class='setting_title'><span> Here is your fate! </span></div>";
+            echo "<div class='profile-picture-circle'  onclick='directProfile()'>";
             
+            echo "<img class='profile-picture-circle-pic' src='data:image;base64,".base64_encode((string)$usericon). "' alt='Profile Picture' /> </div>";
+              
 
-            }
+            
+            echo "<div class='fate-username'  > <span>@$username</span>";
+            echo "</div></div></div></div>";
+        
+            
+   
+        
 
-        ?>
+					
+
+
+				?>
+        <!-- </div>
+    <div class="box">
+      <div style="position: absolute" id="choose_box">
+        <div class="setting_box">
+          <div class="setting_title">
+            <span>Here is your fate!</span>
+          </div>
+          <div class="profile-picture-circle" onclick="directProfile()">
+            <img
+              class="profile-picture-circle-pic"
+              src="icon1.png"
+              alt="Profile Picture"
+            />
+          </div>
+
+          <div class="fate-username" onclick="directProfile()">
+            <span>@randomboy</span>
+          </div>
+        </div>
+
+        
+      </div>
+    </div> -->
+    <div class="fate-username" onclick="directProfile()">
+          </div>
 
   </body>
 </html>
@@ -115,6 +114,23 @@ session_start();
           height: 100vh;
 
           }
+
+          /* .setting_box {
+          width: 50vw;
+          height: 50vh;
+          position: absolute;
+          padding: 5px;
+          top: 50px;
+          left: 90vw ;
+
+          background-color: white;
+          z-index: 3;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-top: 60px;
+          padding-bottom: 30px;
+
+          } */
 
           .setting_box_bak {
           width: 100vw;
@@ -158,6 +174,7 @@ session_start();
           position: fixed;
           top: 170px;
           left:30vw;
+          /* left: calc(50vw - 200px); */
           }
 
           /*close chat box button*/
@@ -213,28 +230,15 @@ session_start();
           left: 8vw;
           }
       </style>
-  <script type="text/javascript">
-  // document.getElementsByClassName("fate-username").onclick = function () {
-  //                   location.href = "twitter.php";
-  // }
 
-  function directProfile() {
-    var user =  document.getElementsByClassName("setting_title")[0].id;
-    // top.location.href = 'my-profile-others.php';
 
-    `$.ajax({
-    type: "POST",
-    url: "my-profile-others.php",
-    data: {
-      fateUserID: user
-
-    },
-    dataType: "json",
-    success: function (data) {
-      var userData = JSON.parse(data);
-    },
-    });`
+<script>
+  document.getElementsByClassName("fate-username").onclick = function () {
+                    location.href = "twitter.php";
   }
 
+  function directProfile() {
+    top.location.href = 'my-profile.php';
+    
+  }
   </script>
-
