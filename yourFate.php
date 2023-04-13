@@ -67,37 +67,26 @@ session_start();
             }
             echo "<div class='fate-username' onclick=\"directProfile()\"> <span>@$username</span>";
             echo "</div></div></div></div>";
-          
-        
-				?>
-
-        <?php 
-
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $db = "tinkle";
-        $conn = new mysqli($servername, $username, $password, $db);
                 
-            if(isset($_POST["submit"])){
+            // if(isset($_POST["submit"])){
                 
-                $sth = "SELECT UserID FROM user WHERE Username='$fateid'";
-                $result =$conn->query($sth);
+            //     $sth = "SELECT UserID FROM user WHERE Username='$fateid'";
+            //     $result =$conn->query($sth);
               
-                if($row = $result->fetch_array()){
+            //     if($row = $result->fetch_array()){
                 
-                  $_SESSION["targetuser"] = $row[0];
+            //       $_SESSION["targetuser"] = $row[0];
                   
-                  header('Location: my-profile-others.php');
+            //       header('Location: my-profile-others.php');
 
-                }else{
+            //     }else{
 
-                  echo"Username do not exisit";
+            //       echo"Username do not exisit";
 
-                }
+            //     }
             
 
-            }
+            // }
 
         ?>
 
@@ -222,7 +211,7 @@ session_start();
     var user =  document.getElementsByClassName("setting_title")[0].id;
     // top.location.href = 'my-profile-others.php';
 
-    `$.ajax({
+    $.ajax({
     type: "POST",
     url: "my-profile-others.php",
     data: {
@@ -233,7 +222,7 @@ session_start();
     success: function (data) {
       var userData = JSON.parse(data);
     },
-    });`
+    });
   }
 
   </script>
