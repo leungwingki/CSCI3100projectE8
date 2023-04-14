@@ -82,11 +82,9 @@ session_start();
                         <span>Do you want to sign out?</span>
                     </div>
                     
-
-                    <div class="yes_confirm" onclick="close_signout_yes_msg()">
-                        <span> Yes</span>
-                    </div>
-
+<form method ="POST" >
+<button type="submit" name="sign_out_but" class="yes_confirm" onclick="close_signout_yes_msg()" > Yes</button>
+</form>
                     
                     <div class="no_confirm" onclick="close_signout_msg()">
                         <span> No</span>
@@ -154,7 +152,14 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$uid=$_SESSION['UserID'];
+
+
+
+if(isset($_POST["sign_out_but"])){
+    echo"<script>location.href = 'LogIn.php';</script>";
+    $_SESSION['UserID']=null;
+
+}
 
 if(isset($_POST["send_deactivate"])){
     echo"<script>location.href = 'LogIn.php';</script>";
