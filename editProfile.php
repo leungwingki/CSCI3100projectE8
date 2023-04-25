@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -41,11 +44,21 @@
                     <div class="changepw_title">
                         <span>Edit Bio</span>
                     </div>
-                    <input type="text" size="50" placeholder="Bio..."  style="width: 200px;height:80px;line-height:40px;font-size: 20px;margin-top: 30px;margin-left: 40px;"/>
-                    
-                    <div class="btn_confirm" onclick="pw_msg()">
-                        <span> Confirm</span>
+                    <form method="POST">
+
+
+                    <div class="comment_box">
+                        <input type="text" name="inputbox1" size="50" placeholder="bio..."  style="width: 300px;height:150px;line-height:40px;font-size: 20px;margin-top: 120px;margin-left: 40px;"/>
                     </div>
+
+                    <div class="space" >
+                        <span> </span>
+                    </div>
+                    <button type="submit" name="send1" class="btn02" >Submit</button>
+
+                    </form>
+
+
                 </div>
                 
                 <div class="close_box" onclick="closesetting()"></div>
@@ -103,11 +116,19 @@
                         <span>Edit Username</span>
                     </div>
                     
-                    <input type="text" size="50" placeholder="Type your Username..."  style="width: 200px;height:80px;line-height:40px;font-size: 20px;margin-top: 30px;margin-left: 40px;"/>
-                    
-                    <div class="btn_confirm" onclick="pw_msg()">
-                        <span> Confirm</span>
+                    <form method="POST">
+
+
+                    <div class="comment_box">
+                        <input type="text" name="inputbox2" size="50" placeholder="bio..."  style="width: 200px;height:70px;line-height:40px;font-size: 20px;margin-top: 120px;margin-left: 40px;"/>
                     </div>
+
+                    <div class="space" >
+                        <span> </span>
+                    </div>
+                    <button type="submit" name="send2" class="btn02" >Submit</button>
+
+                    </form>
                 </div>
                 
                 <div class="close_box" onclick="closesetting()"></div>
@@ -154,6 +175,57 @@
 
             </div>
 </div>
+
+    <?php
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $db = "tinkle";
+    $UserID=$_SESSION['UserID'];
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $db);
+
+    // Check connection
+    if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+    }
+
+    if(isset($_POST["send1"])){
+        if($_POST["inputbox1"] != ""){
+            $bio = $_POST["inputbox1"];
+            $sql = "UPDATE user SET bio='$bio' WHERE UserID=$UserID";
+            if($conn->query($sql) == FALSE){
+                echo "error :(";
+            }else{
+
+                echo"<script>location.href = 'twitter.php';</script>";
+
+
+
+            }
+        }
+    
+    }
+
+    if(isset($_POST["send2"])){
+        if($_POST["inputbox2"] != ""){
+            $username = $_POST["inputbox2"];
+            $sql = "UPDATE user SET username='$username' WHERE UserID=$UserID";
+            if($conn->query($sql) == FALSE){
+                echo "error :(";
+            }else{
+
+                echo"<script>location.href = 'twitter.php';</script>";
+
+
+
+            }
+        }
+    
+    }
+
+    ?>
 
     </body>
 </html>
