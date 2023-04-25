@@ -48,7 +48,7 @@ session_start();
 
 
                     <div class="comment_box">
-                        <input type="text" name="inputbox1" size="50" placeholder="bio..."  style="width: 300px;height:150px;line-height:40px;font-size: 20px;margin-top: 120px;margin-left: 40px;"/>
+                        <input type="text" name="inputbox1" size="50" placeholder="bio..."  style="width: 380px;height:200px;line-height:40px;font-size: 20px;margin-top: 50px;margin-left: 40px;"/>
                     </div>
 
                     <div class="space" >
@@ -85,12 +85,11 @@ session_start();
                         <span>Edit ICON</span>
                     </div>
                     
-                    <input type="text" size="50" placeholder="Type your ICON..."  style="width: 200px;height:80px;line-height:40px;font-size: 20px;margin-top: 30px;margin-left: 40px;"/>
-                    
-                    <div class="btn_confirm" onclick="pw_msg()">
-                        <span> Confirm</span>
-                    </div>
-                </div>
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        <input type="file" name="choosefile2" value="" />
+                         <div>
+                            <button type="submit" name="uploadfile2">UPDATE ICON</button></div>
+                    </form>
                 
                 <div class="close_box" onclick="closesetting()"></div>
             </div>
@@ -104,6 +103,8 @@ session_start();
                 </div>
                 <div class="close_box" onclick="closesetting()"></div>
             </div>
+            </div>
+
 
 
 
@@ -153,12 +154,12 @@ session_start();
                         <span>Edit Cover</span>
                     </div>
                     
-                    <input type="text" size="50" placeholder="Type your Cover..."  style="width: 200px;height:80px;line-height:40px;font-size: 20px;margin-top: 30px;margin-left: 40px;"/>
                     
-                    <div class="btn_confirm" onclick="pw_msg()">
-                        <span> Confirm</span>
-                    </div>
-                </div>
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        <input type="file" name="choosefile" value="" />
+                         <div>
+                            <button type="submit" name="uploadfile">UPDATE COVER</button></div>
+                    </form>
                 
                 <div class="close_box" onclick="closesetting()"></div>
             </div>
@@ -173,8 +174,9 @@ session_start();
                 <div class="close_box" onclick="closesetting()"></div>
             </div>
 
+
             </div>
-</div>
+    </div>
 
     <?php
 
@@ -225,6 +227,35 @@ session_start();
     
     }
 
+
+    if (isset($_POST['uploadfile'])) {
+        $filename = $_FILES["choosefile"]["name"];
+        $tempname = $_FILES["choosefile"]["tmp_name"];  
+            $folder = "image/".$filename;
+            $sql = "UPDATE user SET cover=('$filename') WHERE UserID=$UserID ";
+    
+            if($conn->query($sql) == FALSE){
+                echo "error :(";
+            }else{
+
+                echo"<script>location.href = 'twitter.php';</script>";
+            }
+    }
+
+    if (isset($_POST['uploadfile2'])) {
+        $filename = $_FILES["choosefile2"]["name"];
+        $tempname = $_FILES["choosefile2"]["tmp_name"];  
+            $folder = "image/".$filename;
+            $sql = "UPDATE user SET icon=('$filename') WHERE UserID=$UserID ";
+    
+            if($conn->query($sql) == FALSE){
+                echo "error :(";
+            }else{
+
+                echo"<script>location.href = 'twitter.php';</script>";
+            }
+    }
+    
     ?>
 
     </body>
