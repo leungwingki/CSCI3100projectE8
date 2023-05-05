@@ -22,4 +22,3 @@ Import downloaded files into web server and database.
 
 **Step 4:** <br />
 Start and enjoy our Tinkle!
-
